@@ -118,6 +118,14 @@ class TrueValidator extends ConstraintValidator
     {
         $host = sprintf('%s%s?%s', $host, $path, http_build_query($data));
 
-        return file_get_contents($host);
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $host);
+        curl_setopt($ch, CURLOPT_POST, count($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        return $result;
     }
 }
